@@ -333,6 +333,7 @@ YeeLight_Set
     
     my ($hash, $name, $cmd, @val) = @_;
 	my $model = $hash->{MODEL};
+	$model = "undef" if(!defined($model));
 	
 	my $list = $hash->{helper}->{CommandSet};
 
@@ -405,10 +406,10 @@ YeeLight_SelectSetCmd
 		}
 	}
 	
-	if ($hash->{STATE} ne "opened" && lc $cmd ne 'reopen')
+	if ($hash->{STATE} ne "opened" && lc $cmd ne "reopen")
 	{
-		Log3 $name, 3, "$name can't send $cmd ".join(" ", @args)." with state \"$hash->{STATE}".
-		return "Can't send command if bulb is not connected. Try \"reopen\" and check, if bulb is powered. Current state is $hash->{STATE}";
+		Log3 $name, 3, "$name cant send $cmd ".join(" ", @args)." with state $hash->{STATE}";
+		return "Cant send command if bulb is not connected. Try reopen and check, if bulb is powered. Current state is $hash->{STATE}";
 	}
   
 	my $cnt = @args;
@@ -902,6 +903,7 @@ YeeLight_SendCmd
 	$defaultRamp	= $attr{$name}{defaultramp} if ($attr{$name}{defaultramp});
 	
 	my $model = $hash->{MODEL};
+	$model = "undef" if(!defined($model));
 	
 	if (lc $cmd eq "name"
 		|| lc $cmd eq "default"
@@ -970,6 +972,7 @@ YeeLight_StatusRequest
 	my $send	= '{"id":'.$msgID.',"method":"get_prop","params":["power","bright","ct","rgb","hue","sat","color_mode","flowing","delayoff","flow_params","music_on","name","active_mode","nl_br"]}';
 	
 	my $model = $hash->{MODEL};
+	$model = "undef" if(!defined($model));
 	
 	#Meteorite Ambiente check
 	if ($model eq "meteorite")
