@@ -149,6 +149,7 @@ YeeLight_Define
 	
 	my $model;
 	
+	$model = "undef";
 	$model = $hash->{MODEL} if defined($hash->{MODEL});
 	$attr{$name}{devStateIcon}	= '{my $power=ReadingsVal($name,"power","off");my $mode=ReadingsVal($name,"color_mode","RGB");if($power eq "off"){Color::devStateIcon($name,"rgb","rgb","power");}else{if($mode eq "RGB"){Color::devStateIcon($name,"rgb","rgb","bright");}elsif($mode eq "color temperature"){Color::devStateIcon($name,"rgb",undef,"bright");}}}' if (!defined($attr{$name}{devStateIcon}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
 	$attr{$name}{webCmd}		= 'rgb:bright:ct:rgb ffffff:rgb ff0000:rgb 00ff00:rgb 0000ff:on:off'					if (!defined($attr{$name}{webCmd}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
@@ -968,12 +969,14 @@ YeeLight_StatusRequest
 	
 	my $send	= '{"id":'.$msgID.',"method":"get_prop","params":["power","bright","ct","rgb","hue","sat","color_mode","flowing","delayoff","flow_params","music_on","name","active_mode","nl_br"]}';
 	
+	my $model = $hash->{MODEL};
+	
 	#Meteorite Ambiente check
-	if ($hash->{MODEL} eq "meteorite")
+	if ($model eq "meteorite")
 	{
 		$send	= '{"id":'.$msgID.',"method":"get_prop","params":["main_power","bright","ct","rgb","hue","sat","color_mode","flowing","delayoff","flow_params","music_on","name","active_mode","nl_br"]}';
 	}
-	elsif ($hash->{MODEL} eq "meteorite_ambiente")
+	elsif ($model eq "meteorite_ambiente")
 	{
 		$send	= '{"id":'.$msgID.',"method":"get_prop","params":["bg_power","bg_bright","bg_ct","bg_rgb","bg_hue","bg_sat","bg_color_mode","bg_flowing","bg_delayoff","bg_flow_params","bg_music_on","name","bg_active_mode"]}';
 	}
