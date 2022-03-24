@@ -147,9 +147,9 @@ YeeLight_Define
 	
 	$modules{YeeLight}{defptr}{$hash->{ID}} = $hash;
 	
-	my $model = $hash->{MODEL};
-	$model = "undef" if(!defined($model));
-	
+	my $model = "undef";
+	$model = $hash->{MODEL} if defined($hash->{MODEL});
+ 
 	$attr{$name}{devStateIcon}	= '{my $power=ReadingsVal($name,"power","off");my $mode=ReadingsVal($name,"color_mode","RGB");if($power eq "off"){Color::devStateIcon($name,"rgb","rgb","power");}else{if($mode eq "RGB"){Color::devStateIcon($name,"rgb","rgb","bright");}elsif($mode eq "color temperature"){Color::devStateIcon($name,"rgb",undef,"bright");}}}' if (!defined($attr{$name}{devStateIcon}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
 	$attr{$name}{webCmd}		= 'rgb:bright:ct:rgb ffffff:rgb ff0000:rgb 00ff00:rgb 0000ff:on:off'					if (!defined($attr{$name}{webCmd}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
 	$attr{$name}{widgetOverride}= 'bright:colorpicker,BRI,0,1,100 ct:colorpicker,CT,1700,10,6500 rgb:colorpicker,RGB'	if (!defined($attr{$name}{widgetOverride}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
@@ -331,8 +331,8 @@ YeeLight_Set
 {
     
     my ($hash, $name, $cmd, @val) = @_;
-	my $model = $hash->{MODEL};
-	$model = "undef" if(!defined($model));
+	my $model = "undef";
+	$model = $hash->{MODEL} if defined($hash->{MODEL});
 	
 	my $list = $hash->{helper}->{CommandSet};
 
@@ -901,8 +901,8 @@ YeeLight_SendCmd
 	$defaultRamp	= $attr{$bName}{defaultramp} if (defined($bName) && $attr{$bName}{defaultramp});
 	$defaultRamp	= $attr{$name}{defaultramp} if ($attr{$name}{defaultramp});
 	
-	my $model = $hash->{MODEL};
-	$model = "undef" if(!defined($model));
+	my $model = "undef";
+	$model = $hash->{MODEL} if defined($hash->{MODEL});
 	
 	if (lc $cmd eq "name"
 		|| lc $cmd eq "default"
@@ -970,8 +970,8 @@ YeeLight_StatusRequest
 	
 	my $send	= '{"id":'.$msgID.',"method":"get_prop","params":["power","bright","ct","rgb","hue","sat","color_mode","flowing","delayoff","flow_params","music_on","name","active_mode","nl_br"]}';
 	
-	my $model = $hash->{MODEL};
-	$model = "undef" if(!defined($model));
+	my $model = "undef";
+	$model = $hash->{MODEL} if defined($hash->{MODEL});
 	
 	#Meteorite Ambiente check
 	if ($model eq "meteorite")
@@ -1181,8 +1181,8 @@ YeeLight_Parse
 {
 	my ($hash,$json) = @_;
 	my $name = $hash->{NAME};
-	my $model = $hash->{MODEL};
-	$model = "undef" if(!defined($model));
+	my $model = "undef";
+	$model = $hash->{MODEL} if defined($hash->{MODEL});
 	
 	my $rgb		= undef;
 	my $hexrgb	= undef;
@@ -1589,8 +1589,8 @@ YeeLightBridge_UpdateDev
 	my $host		= substr($DeviceName,0,length($DeviceName)-6);
 	my $port		= substr($DeviceName,length($host) + 1);
 	my $id			= $mcHash->{"id"};
-	my $model		= $mcHash->{"model"};
-	$model = "undef" if(!defined($model));
+	my $model 		= "undef";
+	$model 			= $mcHash->{"model"} if defined($mcHash->{"model"});
 	my $fw_ver		= $mcHash->{"fw_ver"};
 	my $support		= $mcHash->{"support"};
 	my $power		= $mcHash->{"power"};
