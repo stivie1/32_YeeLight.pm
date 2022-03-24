@@ -43,6 +43,8 @@
 # 14 fixed some errors
 # 15 optional parameter for define: model
 # 16 fixed bugs blocking fhem when a lamp is not reachable, not able to set keepAlive to 0
+# 17 fixed undefin variable $model
+#	 added autoConnect Attribute (thanks to verybadsoldier)
 
 # verbose level
 # 0: quit
@@ -85,6 +87,7 @@ YeeLight_Initialize
 		."timeout "
 		."keepAlive "
 		."userScene[0-9] "
+		."autoConnect:1,0 "
 		."$readingFnAttributes";
 	
 	# Comm from Bridge
@@ -149,7 +152,6 @@ YeeLight_Define
 	
 	my $model = "undef";
 	$model = $hash->{MODEL} if defined($hash->{MODEL});
- 
 	$attr{$name}{devStateIcon}	= '{my $power=ReadingsVal($name,"power","off");my $mode=ReadingsVal($name,"color_mode","RGB");if($power eq "off"){Color::devStateIcon($name,"rgb","rgb","power");}else{if($mode eq "RGB"){Color::devStateIcon($name,"rgb","rgb","bright");}elsif($mode eq "color temperature"){Color::devStateIcon($name,"rgb",undef,"bright");}}}' if (!defined($attr{$name}{devStateIcon}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
 	$attr{$name}{webCmd}		= 'rgb:bright:ct:rgb ffffff:rgb ff0000:rgb 00ff00:rgb 0000ff:on:off'					if (!defined($attr{$name}{webCmd}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
 	$attr{$name}{widgetOverride}= 'bright:colorpicker,BRI,0,1,100 ct:colorpicker,CT,1700,10,6500 rgb:colorpicker,RGB'	if (!defined($attr{$name}{widgetOverride}) && (!defined($model) || ($model eq "color") || ($model eq "stripe")));
@@ -1478,7 +1480,7 @@ YeeLight_Ready
 		my ($hash, $err) = @_;
 		Log3 $name, 2, "$name: $err" if($err);
 		return "$err" if($err);
-	}) if ( $hash->{STATE} eq "disconnected" );
+	}) if ( $hash->{STATE} eq "disconnected" && AttrVal( $name, "autoConnect", 1 ) );
 }
 
 sub
