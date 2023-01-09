@@ -1644,7 +1644,7 @@ YeeLightBridge_UpdateDev
 sub
 IsValidIP
 {
-	return $_[0] =~ /^[\d\.]*$/ && inet_aton($_[0]);
+	return $_[0] =~ /^[\d\.]*$/;# && inet_aton($_[0]);
 }
 
 sub
